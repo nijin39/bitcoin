@@ -10,6 +10,7 @@ const client = new WebClient(TOKEN);
 const CHANNEL_ID = "general";
 
 let messageSentTimestamp = "";
+let previousLowestPrice = Number.MAX_SAFE_INTEGER;
 
 const insertDDB = (data, market) => {
     var insertLoop = new Promise((resolve, reject) =>  { 
@@ -23,7 +24,6 @@ const insertDDB = (data, market) => {
     insertLoop.then( async () => {
         ddb.executeScan();
         const result = await upbit.getCurrentPrice(market);
-        console.log(result);
     });
 }
 
@@ -55,11 +55,17 @@ cron.schedule("*/2 * * * *", () => {
     //upbit.getCandle( 5, 'KRW-XRP', insertDDB);
 
     //findMinValue("KRW-BTC").then( (data) => {console.log(data)});
-    findMinValue("KRW-ETC").then( async (data) => {
-        const current = await upbit.getCurrentPrice("KRW-ETC");
-        console.log("Current, Lower, Boolean", current, data, Number(data)+600 < Number(current));
+    findMinValue("KRW-ETC").then( async (lowestPrice) => {
+        
+        if( previousLowestPrice > lowestPrice) {
+            console.log("Change Lowest Price");
+            previousLowestPrice = lowestPrice;
+        }
 
-        if( (Number(data)+600 < Number(current)) && (messageSentTimestamp < moment().subtract(1, "hours").format("YYYY-MM-DD[T]HH:mm:ss"))) {
+        const current = await upbit.getCurrentPrice("KRW-ETC");
+        console.log("Current, Lower, Boolean", current, lowestPrice, Number(lowestPrice)+600 < Number(current));
+
+        if( (Number(lowestPrice)+600 < Number(current)) && (messageSentTimestamp < moment().subtract(1, "hours").format("YYYY-MM-DD[T]HH:mm:ss"))) {
             await requestMessage("Buy "+current);
             messageSentTimestamp = moment().format("YYYY-MM-DD[T]HH:mm:ss")
         }

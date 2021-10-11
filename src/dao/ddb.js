@@ -83,7 +83,6 @@ module.exports.executeQuery = async (queryInput) => {
 module.exports.executePutItem = async (putItemInput) => {
     try {
         const putItemOutput = await dynamoDbClient.putItem(putItemInput).promise();
-        console.info('Successfully put item.');
         // Handle putItemOutput
     } catch (err) {
         handlePutItemError(err);
@@ -93,7 +92,7 @@ module.exports.executePutItem = async (putItemInput) => {
 module.exports.executeScan = async () => {
   try {
     const scanOutput = await dynamoDbClient.scan(scanInput).promise();
-    console.info(scanOutput.Count);
+    //console.info(scanOutput.Count);
   } catch (err) {
     handleScanError(err);
   }
