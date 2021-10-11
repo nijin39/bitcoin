@@ -5,9 +5,9 @@ const moment = require("moment");
 const cron = require('node-cron');
 const { WebClient } = require("@slack/web-api");
 
-const TOKEN = "xoxb-51166302214-1750860450418-AgQKiC7ZjJzLkkgR5e3EMH1Z";
+const TOKEN = "xoxb-51166302214-1750860450418-Sgp93S0KWYUyyQ9D4kUWx3Uf";
 const client = new WebClient(TOKEN);
-const CHANNEL_ID = "general";
+const CHANNEL_ID = "U1H54HSS1";
 
 let messageSentTimestamp = "";
 let previousLowestPrice = Number.MAX_SAFE_INTEGER;
